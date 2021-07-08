@@ -1,3 +1,16 @@
+local movementByte = 0x0202
+local rotationByte = 0x0203
+local nextPieceByte = 0x0213
+
+function getCurrentPiece()
+	local currentPiece = mainmemory.readbyte(rotationByte)
+	return math.floor(currentPiece / 4)
+end
+
+function getNextPiece()
+	local nextPieceText = mainmemory.readbyte(nextPieceByte)
+	return math.floor(nextPieceText / 4)
+end
 
 --Move piece
 function move (curPos, endPos)
