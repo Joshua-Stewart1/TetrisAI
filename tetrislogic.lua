@@ -65,7 +65,7 @@ function holes(grid) do
 end
 
 function best(grid, block) do
-	local x = grid
+	local x = {0, 0, grid}
 	local y = 10000
 	for i, rot in ipairs(block) do
 		for c = 1, table.maxn(grid) - table.maxn(rot), 1 do
@@ -76,7 +76,7 @@ function best(grid, block) do
 			z = z + holes(a) * 10
 			if z < y then
 				y = z
-				x = a
+				x = {c, i, a}
 			end
 		end
 	end
