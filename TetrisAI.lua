@@ -55,7 +55,7 @@ end
 
 function drop(grid, block, col)
 	local row = 0
-	while canFit(grid, block, row + 1, col) do
+	while row + table.maxn(block) <= table.maxn(grid) and canFit(grid, block, row + 1, col) do
 		row = row + 1
 	end
 	for i, r in ipairs(block) do
@@ -63,7 +63,7 @@ function drop(grid, block, col)
 			grid[i + row][j + col] = grid[i + row][j + col] or block[i][j]
 		end
 	end
-	--removeFullRows(grid, table.maxn(grid[i]))
+	removeFullRows(grid, table.maxn(grid[1]))
 end
 
 function sumRow(row)
