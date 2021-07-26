@@ -1,6 +1,6 @@
 function canFit(grid, block, row, col)
 	for i, r in ipairs(block) do
-		for j, c in ipairs(block[i])) do
+		for j, c in ipairs(block[i]) do
 			if (block[i][j] and grid[i + row][j + col]) then
 				return false
 			end
@@ -72,7 +72,7 @@ function best(grid, block) do
 			local a = grid
 			drop(a, rot, c)
 			local z = 0
-			while z < table.maxn(a) and sumRow(a[table.maxn(a) - z]) > 0) do z = z + 1 end
+			while z < table.maxn(a) and sumRow(a[table.maxn(a) - z]) > 0 do z = z + 1 end
 			z = z + holes(a) * 10
 			if z < y then
 				y = z
@@ -81,12 +81,15 @@ function best(grid, block) do
 		end
 	end
 	return x
-end
+end)
 
-I = {{{true, true, true, true}}, {{true}, {true}, {true}, {true}}}
-O = {{{true, true}, {true, true}}}
-T = {{{true, true, true}, {false, true, false}}, {{true, false}, {true, true}, {true, false}}, {{false, true, false}, {true, true, true}}, {{false, true}, {true, true}, {false, true}}}
-J = {{{true, true, true}, {false, false, true}}, {{false, true}, {false, true}, {true, true}}, {{true, false, false}, {true, true, true}}, {{true, true}, {true, false}, {true, false}}}
-L = {{{true, true, true}, {true, false, false}}, {{true, false}, {true, false}, {true, true}}, {{false, false, true}, {true, true, true}}, {{true, true}, {false, true}, {false, true}}}
-S = {{{false, true, true}, {true, true, false}}, {{true, false}, {true, true}, {false, true}}}
-Z = {{{true, true, false}, {false, true, true}}, {{false, true}, {true, true}, {true, false}}}
+
+
+
+--I = {{{true, true, true, true}}, {{true}, {true}, {true}, {true}}}
+--O = {{{true, true}, {true, true}}}
+--T = {{{true, true, true}, {false, true, false}}, {{true, false}, {true, true}, {true, false}}, {{false, true, false}, {true, true, true}}, {{false, true}, {true, true}, {false, true}}}
+--J = {{{true, true, true}, {false, false, true}}, {{false, true}, {false, true}, {true, true}}, {{true, false, false}, {true, true, true}}, {{true, true}, {true, false}, {true, false}}}
+--L = {{{true, true, true}, {true, false, false}}, {{true, false}, {true, false}, {true, true}}, {{false, false, true}, {true, true, true}}, {{true, true}, {false, true}, {false, true}}}
+--S = {{{false, true, true}, {true, true, false}}, {{true, false}, {true, true}, {false, true}}}
+--Z = {{{true, true, false}, {false, true, true}}, {{false, true}, {true, true}, {true, false}}}
