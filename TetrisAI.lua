@@ -1,25 +1,7 @@
 local movementByte = 0x0202
 local rotationByte = 0x0203
 local nextPieceByte = 0x0213
-local g = {{false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false},
-			{false,false,false,false,false,false,false,false,false,false}}
-
+g = {}
 
  I = {{{true, true, true, true}}, {{true}, {true}, {true}, {true}}}
  O = {{{true, true}, {true, true}}}
@@ -30,6 +12,7 @@ local g = {{false,false,false,false,false,false,false,false,false,false},
  Z = {{{true, true, false}, {false, true, true}}, {{false, true}, {true, true}, {true, false}}}
 
 function canFit(grid, block, row, col)
+	--print("Row " .. row .. " Col: " .. col)
 	for i, r in ipairs(block) do
 		for j, c in ipairs(block[i]) do
 			if block[i][j] and grid[i + row][j + col] then
@@ -46,7 +29,7 @@ function removeFullRows(grid, cols)
 			table.remove(grid, i)
 			local a = {}
 			for j = 1, cols do
-				a[j] = false
+				a[j] = false	
 			end
 			table.insert(grid, 1, a)
 		end 	
@@ -210,12 +193,12 @@ end
 
 local botText = "Off";
 local botActive = true;
---for i=1,18 do
---	grid[i] = {}    
---	for j=1,10 do
---	  grid[i][j] = false
---	end
---end
+for i=1,18 do
+	g[i] = {}    
+	for j=1,10 do
+	  g[i][j] = false
+	end
+end
 
 local currPos = 0;
 local targetPos;
@@ -247,8 +230,8 @@ while true do
 			output = best(g, blockNumToBlockArray(getCurrentPiece()))
 			--print(currPiece)
 			--print("getCurrentPiece: " .. getCurrentPiece())
-			print("Move: " .. output[1])
-			print("Rotate: " .. output[2])
+			--print("Move: " .. output[1])
+			--  print("Rotate: " .. output[2])
 		end
 		
 		--local output = best(g, blockNumToBlockArray(getCurrentPiece()))
