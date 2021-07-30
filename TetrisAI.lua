@@ -211,6 +211,10 @@ local targetRot
 local currPiece = nil
 local output
 
+local test = require "tuner"
+
+tune()
+
 while true do
 
 	

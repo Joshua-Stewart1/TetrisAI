@@ -12,7 +12,10 @@ function Piece:new(cells)
 end
 
 function Piece.fromIndex(index)
-    local cells = {0 = {}, 1 = {}, 2 = {}};
+    local cells = {};
+	cells[0] = {}
+	cells[1] = {}
+	cells[2] = {}
     if (index == 0) then
 		cells[0][0] = true
 		cells[0][1] = true
@@ -90,7 +93,7 @@ function Piece.fromIndex(index)
 	end
 	local piece = Piece:new(cells)
     piece.row = 0
-    piece.column = Math.floor((10 - piece.dimension) / 2)
+    piece.column = math.floor((10 - piece.dimension) / 2)
     return piece
 end
 
@@ -225,7 +228,7 @@ function Piece:computeRotateOffset(grid)
     local _piece = self.clone()
     _piece.rotateCells()
     if (grid.valid(_piece)) then
-        return { rowOffset: _piece.row - self.row, columnOffset: _piece.column - self.column }
+        return { _piece.row - self.row, _piece.column - self.column }
     end
 
     local initialRow = _piece.row;
@@ -234,13 +237,13 @@ function Piece:computeRotateOffset(grid)
     for i = 0, _piece.dimension - 2 do
         _piece.column = initialCol + i
         if (grid.valid(_piece)) then
-            return { rowOffset: _piece.row - self.row, columnOffset: _piece.column - self.column }
+            return {  _piece.row - self.row, _piece.column - self.column }
         end
 
         for j = 0, _piece.dimension - 2 do
             _piece.row = initialRow - j
             if (grid.valid(_piece)) then
-                return { rowOffset: _piece.row - self.row, columnOffset: _piece.column - self.column }
+                return {  _piece.row - self.row, _piece.column - self.column }
             end
         end
         _piece.row = initialRow
@@ -250,13 +253,13 @@ function Piece:computeRotateOffset(grid)
     for i = 0, _piece.dimension - 2 do
         _piece.column = initialCol - i
         if (grid.valid(_piece)) then
-            return { rowOffset: _piece.row - self.row, columnOffset: _piece.column - self.column }
+            return { _piece.row - self.row, _piece.column - self.column }
         end
 
         for j = 0, _piece.dimension - 2 do
             _piece.row = initialRow - j
             if (grid.valid(_piece)) then
-                return { rowOffset: _piece.row - self.row, columnOffset: _piece.column - self.column }
+                return { _piece.row - self.row, _piece.column - self.column }
             end
         end
         _piece.row = initialRow

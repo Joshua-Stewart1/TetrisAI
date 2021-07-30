@@ -156,7 +156,7 @@ function Grid:valid(piece)
         for c = 0, table.maxn(piece.cells[r]) do
             local _r = piece.row + r
             local _c = piece.column + c
-            if piece.cells[r][c]
+            if piece.cells[r][c] then
                 if _r < 0 or _r >= self.rows or _c < 0 or _c >= self.columns or self.cells[_r][_c] then
                     return false
                 end

@@ -17,12 +17,13 @@ function AI:_best(grid, workingPieces, workingPieceIndex)
     local workingPiece = workingPieces[workingPieceIndex]
 
     for rotation = 0, 3 do
+        require "tetrispiece"
         local _piece = workingPiece:clone()
         for i = 0, rotation - 1 do
             _piece:rotate(grid)
         end
 
-        while (_piece:moveLeft(grid)) do end
+        while (_piece:moveLeft(grid)) do end    
 
         while (grid.valid(_piece)) do
             local _pieceSet = _piece:clone()
@@ -43,7 +44,7 @@ function AI:_best(grid, workingPieces, workingPieceIndex)
                 best = _piece:clone()
             end
 
-            _piece.column++;
+            _piece.column = _piece.column + 1;
         end
     end
 

@@ -16,11 +16,11 @@ end
 
 function generateRandomCandidate()
 	math.randomseed(os.clock())
-	candidate = {}
-	candidate.heightWeight: math.random() - 0.5
-	candidate.linesWeight: math.random() - 0.5
-	candidate.holesWeight: math.random() - 0.5,
-	candidate.bumpinessWeight: math.random() - 0.5
+	local candidate = {}
+	candidate.heightWeight = math.random() - 0.5
+	candidate.linesWeight = math.random() - 0.5
+	candidate.holesWeight = math.random() - 0.5
+	candidate.bumpinessWeight = math.random() - 0.5
 	
 	normalize(candidate)
 
@@ -36,13 +36,16 @@ end
 function computeFitnesses(candidates, numberOfGames, maxNumberOfMoves)
 	for i = 1, table.maxn(candidates) do
 		local candidate = candidates[i]
+		require "tetrisai_"
 		local ai = AI:new(candidate)
 		local totalScore = 0
 		math.randomseed(os.clock())
 		for j = 0, numberOfGames do
+			require "tetrisgrid"
 			local grid = Grid:new(18,10)
+			require "tetrispiece"
 			local workingPieces = {Piece.fromIndex(math.random(0,6)),Piece.fromIndex(math.random(0,6))}
-			local workingPiece = workingPiece[1]
+			local workingPiece = workingPieces[1]
 			local score = 0
 			local numberOfMoves = 1
 
@@ -103,13 +106,13 @@ function mutate(candidate)
 	local randomInt = randomInteger(0,3)
 	
 	if randomInt == 0 then
-		candidate.heightWeight += quantity
+		candidate.heightWeight = candidate.heightWeight + quantity
 	elseif randomInt == 1 then
-		candidate.linesWeight += quantity
+		candidate.linesWeight = candidate.linesWeight + quantity
 	elseif randomInt == 2 then
-		candidate.holesWeight += quantity
+		candidate.holesWeight = candidate.holesWeight + quantity
 	else
-		candidate.bumpinessWeight += quantity
+		candidate.bumpinessWeight = candidate.bumpinessWeight + quantity
 	end
 end
 
@@ -145,7 +148,7 @@ function tune()
 	while(true) do
 		local newCandidates = {}
 
-		for int i = 1, 30 do
+		for i = 1, 30 do
 			local pair = tournamentSelectPair(candidates,10)
 			local candidate = crossOver(pair[1],pair[2])
 			math.randomseed(os.clock())
@@ -161,10 +164,10 @@ function tune()
 		deleteNLastReplacement(candidates, newCandidates)
 		local totalFitness = 0
 		for i = 1, table.maxn(candidates) do
-			totalFitness += candidates[i].fitness
+			totalFitness = totalFitness + candidates[i].fitness
 		end
-		console.log("Average fitness = " .. (totalFitness / table.maxn(candidates)))
-		console.log("Highest fitness = " .. candidates[1].fitness .. "(" .. count .. ")")
-		console.log("Fittest candidate = " + candidates[1] + "(" + count + ")") 
+		print("Average fitness = " .. (totalFitness / table.maxn(candidates)))
+		print("Highest fitness = " .. candidates[1].fitness .. "(" .. count .. ")")
+		print("Fittest candidate = " + candidates[1] + "(" + count + ")") 
 	end
 end
