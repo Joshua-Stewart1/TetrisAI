@@ -3,13 +3,17 @@ local rotationByte = 0x0203
 local nextPieceByte = 0x0213
 g = {}
 
- I = {{{true, true, true, true}}, {{true}, {true}, {true}, {true}}}
- O = {{{true, true}, {true, true}}}
- T = {{{true, true, true}, {false, true, false}}, {{true, false}, {true, true}, {true, false}}, {{false, true, false}, {true, true, true}}, {{false, true}, {true, true}, {false, true}}}
- J = {{{true, true, true}, {false, false, true}}, {{false, true}, {false, true}, {true, true}}, {{true, false, false}, {true, true, true}}, {{true, true}, {true, false}, {true, false}}}
- L = {{{true, true, true}, {true, false, false}}, {{true, false}, {true, false}, {true, true}}, {{false, false, true}, {true, true, true}}, {{true, true}, {false, true}, {false, true}}}
- S = {{{false, true, true}, {true, true, false}}, {{true, false}, {true, true}, {false, true}}}
- Z = {{{true, true, false}, {false, true, true}}, {{false, true}, {true, true}, {true, false}}}
+I = {{{true, true, true, true}}, {{true}, {true}, {true}, {true}}}
+O = {{{true, true}, {true, true}}}
+T = {{{true, true, true}, {false, true, false}}, {{true, false}, {true, true}, {true, false}}, {{false, true, false}, {true, true, true}}, {{false, true}, {true, true}, {false, true}}}
+J = {{{true, true, true}, {false, false, true}}, {{false, true}, {false, true}, {true, true}}, {{true, false, false}, {true, true, true}}, {{true, true}, {true, false}, {true, false}}}
+L = {{{true, true, true}, {true, false, false}}, {{true, false}, {true, false}, {true, true}}, {{false, false, true}, {true, true, true}}, {{true, true}, {false, true}, {false, true}}}
+S = {{{false, true, true}, {true, true, false}}, {{true, false}, {true, true}, {false, true}}}
+Z = {{{true, true, false}, {false, true, true}}, {{false, true}, {true, true}, {true, false}}}
+
+--
+
+
 
 function canFit(grid, block, row, col)
 	--print("Row " .. row .. " Col: " .. col)
@@ -38,7 +42,7 @@ end
 
 function drop(grid, block, col)
 	local row = 0
-	while row + table.maxn(block) <= table.maxn(grid) and canFit(grid, block, row + 1, col) do
+	while row + table.maxn(block) < table.maxn(grid) and canFit(grid, block, row + 1, col) do
 		row = row + 1
 	end
 	for i, r in ipairs(block) do
@@ -130,8 +134,8 @@ end
 --Move piece
 function move (curPos, endPos)
 
-	local dir = (curPos > endPos);
-	local distance = 0;
+	local dir = (curPos > endPos)
+	local distance = 0
 
 	if(dir) then
 		joypad.set({Left=true})
@@ -163,7 +167,7 @@ end
 function rotate (curPos, endPos)
 
 	local dir = (curPos > endPos);
-	local rotations = 0;
+	local rotations = 0
 
 	if(dir) then
 		joypad.set({A=true})
@@ -200,12 +204,12 @@ for i=1,18 do
 	end
 end
 
-local currPos = 0;
-local targetPos;
-local currRot = 0;
-local targetRot;
-local currPiece = nil;
-local output;
+local currPos = 4
+local targetPos
+local currRot = 1
+local targetRot
+local currPiece = nil
+local output
 
 while true do
 
@@ -224,14 +228,14 @@ while true do
 		botText = "On"
 		
 		if currPiece ~= getCurrentPiece() then
-			currPos = 0
-			currRot = 0
+			currPos = 4
+			currRot = 1
 			currPiece = getCurrentPiece()
 			output = best(g, blockNumToBlockArray(getCurrentPiece()))
 			--print(currPiece)
 			--print("getCurrentPiece: " .. getCurrentPiece())
-			--print("Move: " .. output[1])
-			--  print("Rotate: " .. output[2])
+			print("Move: " .. output[1])
+			print("Rotate: " .. output[2])
 		end
 		
 		--local output = best(g, blockNumToBlockArray(getCurrentPiece()))
@@ -252,7 +256,7 @@ while true do
 
 	else
 		botText = "Off"
-		x = 0;
+		x = 0
 	end
 
 	gui.drawText(25,0, "Bot: "..botText, "Red", "Black")
