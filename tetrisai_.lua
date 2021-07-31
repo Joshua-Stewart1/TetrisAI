@@ -19,11 +19,11 @@ function AI:_best(grid, workingPieces, workingPieceIndex)
     for rotation = 0, 3 do
         require "tetrispiece"
         local _piece = workingPiece:clone()
+        print("Row: " .. _piece.row)
         for i = 0, rotation - 1 do
             _piece:rotate(grid)
         end
-
-        while (_piece:moveLeft(grid)) do end    
+        while _piece:moveLeft(grid) do end    
 
         while (grid.valid(_piece)) do
             local _pieceSet = _piece:clone()
@@ -52,5 +52,5 @@ function AI:_best(grid, workingPieces, workingPieceIndex)
 end
 
 function AI:best(grid, workingPieces)
-    return self:_best(grid, workingPieces, 0).piece
+    return self:_best(grid, workingPieces, 1).piece
 end
