@@ -140,8 +140,8 @@ function Grid:columnHeight(column)
 end
 
 function Grid:addPiece(piece)
-    for r = 0, table.maxn(piece.cells) do
-        for c = 0, table.maxn(piece.cells[r]) do
+    for r = 1, table.maxn(piece.cells) do
+        for c = 1, table.maxn(piece.cells[r]) do
             local _r = piece.row + r
             local _c = piece.column + c
             if piece.cells[r][c] and _r >= 0 then
@@ -152,8 +152,8 @@ function Grid:addPiece(piece)
 end
 
 function Grid:valid(piece)
-    for r = 0, table.maxn(piece.cells) do
-        for c = 0, table.maxn(piece.cells[r]) do
+    for r = 1, table.maxn(piece.cells) do
+        for c = 1, table.maxn(piece.cells[r]) do
             local _r = piece.row + r
             local _c = piece.column + c
             if piece.cells[r][c] then

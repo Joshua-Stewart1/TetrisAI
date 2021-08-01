@@ -23,11 +23,11 @@ function AI:_best(grid, workingPieces, workingPieceIndex)
         for i = 0, rotation - 1 do
             _piece:rotate(grid)
         end
-        while _piece:moveLeft(grid) do end    
+        --while _piece:moveLeft(grid) do end    
 
-        while (grid.valid(_piece)) do
+        while (grid:valid(_piece)) do
             local _pieceSet = _piece:clone()
-            while (_pieceSet:moveDown(grid)) do end
+            --while (_pieceSet:moveDown(grid)) do end
 
             local _grid = grid:clone()
             _grid:addPiece(_pieceSet)

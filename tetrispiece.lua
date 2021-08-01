@@ -3,7 +3,7 @@ Piece = {}
 function Piece:new(cells)
     local p = {}
 	p.cells = cells
-    p.dimension = table.maxn(p.cells) + 1
+    p.dimension = table.maxn(p.cells)
     p.row = 1
     p.column = 1
 	setmetatable(p, self)
@@ -117,8 +117,8 @@ function Piece:canMoveLeft(grid)
         for c = 1, table.maxn(self.cells[r]) - 1 do
             local _r = self.row + r
             local _c = self.column + c - 1
-            if self.cells[r][c] then
-                if _c < 0 or grid.cells[_r][_c] then
+            if self.cells[r][c] ~= 0 then
+                if _c < 0 or grid.cells[_r][_c] ~= 0 then
                     return false
                 end
             end
@@ -132,8 +132,8 @@ function Piece:canMoveRight(grid)
         for c = 1, table.maxn(self.cells[r]) - 1 do
             local _r = self.row + r
             local _c = self.column + c + 1
-            if self.cells[r][c] then
-                if _c >= grid.columns or grid.cells[_r][_c] then
+            if self.cells[r][c] ~= 0 then
+                if _c < 0 or grid.cells[_r][_c] ~= 0 then
                     return false
                 end
             end
@@ -143,12 +143,12 @@ function Piece:canMoveRight(grid)
 end
 
 function Piece:canMoveDown(grid)
-    for r = 1, table.maxn(self.cells) - 1 do
-        for c = 1, table.maxn(self.cells[r]) - 1 do
+    for r = 1, table.maxn(self.cells) do
+        for c = 1, table.maxn(self.cells[r]) do
             local _r = self.row + r + 1
             local _c = self.column + c
-            if self.cells[r][c] then
-                if r >= grid.rows or grid.cells[_r][_c] then
+            if self.cells[r][c] ~= 0 and _r ~= 0 then
+                if r >= grid.rows or grid.cells[_r][_c] ~= 0 then 
                     return false
                 end
             end
@@ -158,7 +158,7 @@ function Piece:canMoveDown(grid)
 end
 
 function Piece:moveLeft(grid)
-    if not self.canMoveLeft(grid) then
+    if not self:canMoveLeft(grid) then
         return false
     end
     self.column = self.column - 1
@@ -166,7 +166,7 @@ function Piece:moveLeft(grid)
 end
 
 function Piece:moveRight(grid)
-    if not self.canMoveRight(grid) then
+    if not self:canMoveRight(grid) then
         return false
     end
     self.column = self.column + 1
@@ -174,7 +174,7 @@ function Piece:moveRight(grid)
 end
 
 function Piece:moveDown(grid)
-    if not self.canMoveDown(grid) then
+    if not self:canMoveDown(grid) then
         return false
     end
     self.row = self.row + 1
@@ -225,8 +225,8 @@ function Piece:rotateCells()
 end
 
 function Piece:computeRotateOffset(grid)
-    local _piece = self.clone()
-    _piece.rotateCells()
+    local _piece = self:clone()
+    _piece:rotateCells()
     if (grid.valid(_piece)) then
         return { _piece.row - self.row, _piece.column - self.column }
     end
@@ -236,13 +236,13 @@ function Piece:computeRotateOffset(grid)
 
     for i = 1, _piece.dimension - 2 do
         _piece.column = initialCol + i
-        if (grid.valid(_piece)) then
+        if (grid:valid(_piece)) then
             return {  _piece.row - self.row, _piece.column - self.column }
         end
 
         for j = 1, _piece.dimension - 2 do
             _piece.row = initialRow - j
-            if (grid.valid(_piece)) then
+            if (grid:valid(_piece)) then
                 return {  _piece.row - self.row, _piece.column - self.column }
             end
         end
@@ -252,13 +252,13 @@ function Piece:computeRotateOffset(grid)
 
     for i = 1, _piece.dimension - 2 do
         _piece.column = initialCol - i
-        if (grid.valid(_piece)) then
+        if (grid:valid(_piece)) then
             return { _piece.row - self.row, _piece.column - self.column }
         end
 
         for j = 1, _piece.dimension - 2 do
             _piece.row = initialRow - j
-            if (grid.valid(_piece)) then
+            if (grid:valid(_piece)) then
                 return { _piece.row - self.row, _piece.column - self.column }
             end
         end
@@ -270,10 +270,10 @@ function Piece:computeRotateOffset(grid)
 end
 
 function Piece:rotate(grid)
-    local offset = self.computeRotateOffset(grid)
-	print("Help me out: " .. offset)
+    local offset = self:computeRotateOffset(grid)
     if (offset ~= nil) then
-        self.rotateCells()
+		print("Im here")
+        self:rotateCells()
         self.row = self.row + offset.rowOffset
         self.column = self.column + offset.columnOffset
     end
