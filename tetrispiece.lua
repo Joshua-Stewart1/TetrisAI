@@ -6,33 +6,18 @@ function Piece:new(cells)
     p.dimension = table.maxn(p.cells)
     p.row = 1
     p.column = 1
+	p.rotations = 0
 	setmetatable(p, self)
 	self.__index = self
 	return p
 end
 
 function Piece.fromIndex(index)
-    local cells = {};
+    local cells = {}
 	cells[1] = {}
 	cells[2] = {}
 	cells[3] = {}
-    if (index == 0) then
-		cells[2][1] = true
-		cells[1][2] = true
-		cells[2][1] = true
-		cells[2][2] = true
-		cells[3] = nil
-	elseif (index == 1) then
-		cells[1][1] = true
-		cells[1][2] = false
-		cells[1][3] = false
-		cells[2][1] = true
-		cells[2][2] = true
-		cells[2][3] = true
-		cells[3][1] = false
-		cells[3][2] = false
-		cells[3][3] = false
-	elseif (index == 2) then
+	if index == 0 then
 		cells[1][1] = false
 		cells[1][2] = false
 		cells[1][3] = true
@@ -42,29 +27,9 @@ function Piece.fromIndex(index)
 		cells[3][1] = false
 		cells[3][2] = false
 		cells[3][3] = false
-	elseif (index == 3) then
+	elseif index == 1 then
 		cells[1][1] = true
-		cells[1][2] = true
-		cells[1][3] = false
-		cells[2][1] = false
-		cells[2][2] = true
-		cells[2][3] = true
-		cells[3][1] = false
-		cells[3][2] = false
-		cells[3][3] = false
-	elseif (index == 4) then
-		cells[1][1] = false
-		cells[1][2] = true
-		cells[1][3] = true
-		cells[2][1] = true
-		cells[2][2] = true
-		cells[2][3] = false
-		cells[3][1] = false
-		cells[3][2] = false
-		cells[3][3] = false
-	elseif (index == 5) then
-		cells[1][1] = false
-		cells[1][2] = true
+		cells[1][2] = false
 		cells[1][3] = false
 		cells[2][1] = true
 		cells[2][2] = true
@@ -72,7 +37,7 @@ function Piece.fromIndex(index)
 		cells[3][1] = false
 		cells[3][2] = false
 		cells[3][3] = false
-	elseif (index == 6) then
+	elseif index == 2 then
 		cells[1][1] = false
 		cells[1][2] = false
 		cells[1][3] = false
@@ -90,6 +55,42 @@ function Piece.fromIndex(index)
 		cells[4][2] = false
 		cells[4][3] = false
 		cells[4][4] = false
+	elseif index == 3 then
+		cells[1][1] = true
+		cells[1][2] = true
+		cells[2][1] = true
+		cells[2][2] = true
+		cells[3] = nil
+	elseif index == 4 then
+		cells[1][1] = true
+		cells[1][2] = true
+		cells[1][3] = false
+		cells[2][1] = false
+		cells[2][2] = true
+		cells[2][3] = true
+		cells[3][1] = false
+		cells[3][2] = false
+		cells[3][3] = false
+	elseif index == 5 then
+		cells[1][1] = false
+		cells[1][2] = true
+		cells[1][3] = true
+		cells[2][1] = true
+		cells[2][2] = true
+		cells[2][3] = false
+		cells[3][1] = false
+		cells[3][2] = false
+		cells[3][3] = false
+	elseif index == 6 then
+		cells[1][1] = false
+		cells[1][2] = true
+		cells[1][3] = false
+		cells[2][1] = true
+		cells[2][2] = true
+		cells[2][3] = true
+		cells[3][1] = false
+		cells[3][2] = false
+		cells[3][3] = false
 	end
 	local piece = Piece:new(cells)
     piece.row = 1
@@ -113,12 +114,12 @@ function Piece:clone()
 end
 
 function Piece:canMoveLeft(grid)
-    for r = 1, table.maxn(self.cells) - 1 do
-        for c = 1, table.maxn(self.cells[r]) - 1 do
-            local _r = self.row + r
+    for r = 1, table.maxn(self.cells) do
+        for c = 1, table.maxn(self.cells[r]) do
+            local _r = self.row + r 
             local _c = self.column + c - 1
-            if self.cells[r][c] ~= 0 then
-                if _c < 0 or grid.cells[_r][_c] ~= 0 then
+            if self.cells[r][c] ~= false then	
+                if _c < 0 then --not (_c >= 0 and grid.cells[_r][_c] == false) then
                     return false
                 end
             end
@@ -128,30 +129,30 @@ function Piece:canMoveLeft(grid)
 end
 
 function Piece:canMoveRight(grid)
-    for r = 1, table.maxn(self.cells) - 1 do
-        for c = 1, table.maxn(self.cells[r]) - 1 do
-            local _r = self.row + r
+    for r = 1, table.maxn(self.cells) do
+        for c = 1, table.maxn(self.cells[r]) do
+            local _r = self.row + r 
             local _c = self.column + c + 1
-            if self.cells[r][c] ~= 0 then
-                if _c < 0 or grid.cells[_r][_c] ~= 0 then
+            if self.cells[r][c] ~= false then
+                if _c < 0 or grid.cells[_r][_c] ~= false then
                     return false
                 end
             end
         end
     end
     return true
-end
+end	
 
 function Piece:canMoveDown(grid)
     for r = 1, table.maxn(self.cells) do
         for c = 1, table.maxn(self.cells[r]) do
-            local _r = self.row + r + 1
-            local _c = self.column + c
-            if self.cells[r][c] ~= 0 and _r ~= 0 then
-                if r >= grid.rows or grid.cells[_r][_c] ~= 0 then 
+            local _r = self.row + r 
+            local _c = self.column + c 
+            --if self.cells[r][c] ~= false and _r >= 0 then
+                if _r >= grid.rows then --grid.rows then --not (r < grid.rows and grid.cells[_r][_c] == false) then 
                     return false
                 end
-            end
+            --end
         end
     end
     return true
@@ -168,8 +169,7 @@ end
 function Piece:moveRight(grid)
     if not self:canMoveRight(grid) then
         return false
-    end
-    self.column = self.column + 1
+    end 	
     return true
 end
 
@@ -183,7 +183,7 @@ end
 
 function Piece:rotateCells()
 	local _cells = {}
-	for r = 1, self.dimension - 1 do
+	for r = 1, self.dimension do
 		_cells[r] = {}
 	end
 
@@ -227,8 +227,11 @@ end
 function Piece:computeRotateOffset(grid)
     local _piece = self:clone()
     _piece:rotateCells()
-    if (grid.valid(_piece)) then
-        return { _piece.row - self.row, _piece.column - self.column }
+	local offset = {}
+    if (grid:valid(_piece)) then
+		offset.rowOffset = _piece.row - self.row
+		offset.columnOffset = _piece.column - self.column
+        return offset
     end
 
     local initialRow = _piece.row;
@@ -237,13 +240,17 @@ function Piece:computeRotateOffset(grid)
     for i = 1, _piece.dimension - 2 do
         _piece.column = initialCol + i
         if (grid:valid(_piece)) then
-            return {  _piece.row - self.row, _piece.column - self.column }
+			offset.rowOffset = _piece.row - self.row
+			offset.columnOffset = _piece.column - self.column
+			return offset
         end
 
         for j = 1, _piece.dimension - 2 do
             _piece.row = initialRow - j
             if (grid:valid(_piece)) then
-                return {  _piece.row - self.row, _piece.column - self.column }
+				offset.rowOffset = _piece.row - self.row
+				offset.columnOffset = _piece.column - self.column
+				return offset
             end
         end
         _piece.row = initialRow
@@ -253,13 +260,17 @@ function Piece:computeRotateOffset(grid)
     for i = 1, _piece.dimension - 2 do
         _piece.column = initialCol - i
         if (grid:valid(_piece)) then
-            return { _piece.row - self.row, _piece.column - self.column }
+			offset.rowOffset = _piece.row - self.row
+			offset.columnOffset = _piece.column - self.column
+			return offset
         end
 
         for j = 1, _piece.dimension - 2 do
             _piece.row = initialRow - j
             if (grid:valid(_piece)) then
-                return { _piece.row - self.row, _piece.column - self.column }
+				offset.rowOffset = _piece.row - self.row
+				offset.columnOffset = _piece.column - self.column
+				return offset
             end
         end
         _piece.row = initialRow
@@ -270,9 +281,9 @@ function Piece:computeRotateOffset(grid)
 end
 
 function Piece:rotate(grid)
+	self.rotations = self.rotations + 1
     local offset = self:computeRotateOffset(grid)
     if (offset ~= nil) then
-		print("Im here")
         self:rotateCells()
         self.row = self.row + offset.rowOffset
         self.column = self.column + offset.columnOffset

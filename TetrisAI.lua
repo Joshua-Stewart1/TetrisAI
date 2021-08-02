@@ -145,7 +145,7 @@ function move (curPos, endPos)
 		distance = endPos - curPos
 	end
 
-	for i = distance,1,-1 do
+	for i = distance,0,-1 do
 
 		if(dir) then
 			joypad.set({Left=true})
@@ -204,20 +204,51 @@ for i=1,18 do
 	end
 end
 
-local currPos = 4
+local currPos = 3
 local targetPos
 local currRot = 1
 local targetRot
 local currPiece = nil
 local output
 
-local test = require "tuner"
+require "tuner"
+require "tetrispiece"
+require "tetrisai_"
+require "tetrisgrid"
 
-tune()
+local grid = Grid:new(18, 10)
+local weights = {}
+weights.heightWeight = 0.510066
+weights.linesWeight = 0.760666
+weights.holesWeight = 0.35663
+weights.bumpinessWeight = 0.184483
+local ai = AI:new(weights)
+local workingPieces = {nil, Piece:fromIndex(getCurrentPiece())}
+
+--tune()
+
+function startTurn()
+	for i = 1, table.maxn(workingPieces) do
+		--print("in here")
+		workingPieces[i] = workingPieces[i+1]
+	end
+	--print(getCurrentPiece())
+	workingPieces[2] = Piece:fromIndex(getNextPiece())
+	workingPiece = workingPieces[0]
+	--print(table.maxn(workingPieces[table.maxn(workingPieces)].cells))
+	--print(getNextPiece())
+	--workingPieces[1]:clone()
+	--workingPieces[2]:clone()
+	workingPiece = ai:best(grid, workingPieces)
+	--while workingPiece:moveDown(grid) do end
+	grid:addPiece(workingPiece)
+	print("Col: " .. workingPiece.column)
+	print("Rots: " .. workingPiece.rotations)
+	move(currPos, workingPiece.column)
+	rotate(currRot, workingPiece.rotations)
+end
 
 while true do
-
-	
 
 	if joypad.get()["Up"] == true then
 		botActive = not botActive
@@ -230,33 +261,13 @@ while true do
 
 	if botActive then
 		botText = "On"
-		
+
 		if currPiece ~= getCurrentPiece() then
-			currPos = 4
+			currPos = 3
 			currRot = 1
 			currPiece = getCurrentPiece()
-			output = best(g, blockNumToBlockArray(getCurrentPiece()))
-			--print(currPiece)
-			--print("getCurrentPiece: " .. getCurrentPiece())
-			print("Move: " .. output[1])
-			print("Rotate: " .. output[2])
+			startTurn()
 		end
-		
-		--local output = best(g, blockNumToBlockArray(getCurrentPiece()))
-
-		targetPos = output[1]
-		if(currPos ~= targetPos) then
-			move(currPos,targetPos)
-			currPos = targetPos
-		end
-
-		targetRot = output[2]
-		if(currRot ~= targetRot) then
-			rotate(currRot, targetRot)
-			currRot = targetRot
-		end
-		
-		g = output[3]
 
 	else
 		botText = "Off"

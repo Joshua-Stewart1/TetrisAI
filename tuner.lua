@@ -40,7 +40,7 @@ function computeFitnesses(candidates, numberOfGames, maxNumberOfMoves)
 		local ai = AI:new(candidate)
 		local totalScore = 0
 		math.randomseed(os.clock())
-		for j = 0, numberOfGames do
+		for j = 1, numberOfGames do
 			require "tetrisgrid"
 			local grid = Grid:new(18,10)
 			require "tetrispiece"
@@ -50,13 +50,15 @@ function computeFitnesses(candidates, numberOfGames, maxNumberOfMoves)
 			local numberOfMoves = 1
 
 			while numberOfMoves < maxNumberOfMoves and not grid:exceeded() do
+				print("Number of Moves: " .. numberOfMoves)
 				workingPiece = ai:best(grid, workingPieces) 
 				while workingPiece:moveDown(grid) do end
 				grid:addPiece(workingPiece)
 				score = score + grid:clearLines()
-
-				workingPieces[1] = workingPieces[2]
-				workingPieces[2] = Piece.fromIndex(math.random(0,6))
+				for k = 1, table.maxn(workingPieces) - 1 do
+					workingPieces[k] = workingPieces[k+1]
+				end
+				workingPieces[table.maxn(workingPieces)] = Piece.fromIndex(math.random(0,6))
 				workingPiece = workingPieces[1]
 				numberOfMoves = numberOfMoves + 1
 			end
@@ -130,8 +132,8 @@ end
 function tune()
 	local config = {}
 	config.population = 100
-	config.rounds = 5
-	config.moves = 200
+	config.rounds = 2
+	config.moves = 5
 
 	local candidates = {}
 
@@ -147,7 +149,7 @@ function tune()
 
 	while(true) do
 		local newCandidates = {}
-
+		print("Inside of New Candidates")
 		for i = 1, 30 do
 			local pair = tournamentSelectPair(candidates,10)
 			local candidate = crossOver(pair[1],pair[2])
@@ -170,4 +172,5 @@ function tune()
 		print("Highest fitness = " .. candidates[1].fitness .. "(" .. count .. ")")
 		print("Fittest candidate = " + candidates[1] + "(" + count + ")") 
 	end
+	emu.frameadvance()
 end
