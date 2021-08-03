@@ -12,7 +12,8 @@ function Piece:new(cells)
 	return p
 end
 
-function Piece.fromIndex(index)
+function Piece:fromIndex(index)
+	print(index)
     local cells = {}
 	cells[1] = {}
 	cells[2] = {}
@@ -237,7 +238,7 @@ function Piece:computeRotateOffset(grid)
     local initialRow = _piece.row;
     local initialCol = _piece.column;
 
-    for i = 1, _piece.dimension - 2 do
+    for i = 1, _piece.dimension - 1 do
         _piece.column = initialCol + i
         if (grid:valid(_piece)) then
 			offset.rowOffset = _piece.row - self.row
@@ -245,7 +246,7 @@ function Piece:computeRotateOffset(grid)
 			return offset
         end
 
-        for j = 1, _piece.dimension - 2 do
+        for j = 1, _piece.dimension - 1 do
             _piece.row = initialRow - j
             if (grid:valid(_piece)) then
 				offset.rowOffset = _piece.row - self.row
@@ -257,7 +258,7 @@ function Piece:computeRotateOffset(grid)
     end
     _piece.column = initialCol
 
-    for i = 1, _piece.dimension - 2 do
+    for i = 1, _piece.dimension - 1 do
         _piece.column = initialCol - i
         if (grid:valid(_piece)) then
 			offset.rowOffset = _piece.row - self.row

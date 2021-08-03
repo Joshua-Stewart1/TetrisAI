@@ -242,8 +242,9 @@ function startTurn()
 	workingPiece = ai:best(grid, workingPieces)
 	--while workingPiece:moveDown(grid) do end
 	grid:addPiece(workingPiece)
-	print("Col: " .. workingPiece.column)
-	print("Rots: " .. workingPiece.rotations)
+	--grid:printGrid()
+	--print("Col: " .. workingPiece.column)
+	--print("Rots: " .. workingPiece.rotations)
 	move(currPos, workingPiece.column)
 	rotate(currRot, workingPiece.rotations)
 end

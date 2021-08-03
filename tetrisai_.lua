@@ -20,7 +20,7 @@ function AI:_best(grid, workingPieces, workingPieceIndex)
         require "tetrispiece"
         local _piece = workingPiece:clone()
         --print("Row: " .. _piece.row)
-        for i = 0, rotation - 1 do
+        for i = 0, rotation do
             _piece:rotate(grid)
         end
         while _piece:moveLeft(grid) and _piece.column < 0 do 
@@ -41,15 +41,15 @@ function AI:_best(grid, workingPieces, workingPieceIndex)
 
             local score = nil
             if workingPieceIndex == table.maxn(workingPieces) then
-                --print("Inside end of recursive function")
                 score = -self.heightWeight * _grid:aggregateHeight() + self.linesWeight * _grid:lines() - self.holesWeight * _grid:holes() - self.bumpinessWeight * _grid:bumpiness()
+                print(score)
             else
                 --print("Inside call to recursive function")
                 score = self:_best(_grid, workingPieces, workingPieceIndex + 1).score
             end
 
             if bestScore == nil or score > bestScore then
-                --print("Inside bestScore")
+                print("Inside bestScore")
                 bestScore = score
                 best = _piece:clone()
             end

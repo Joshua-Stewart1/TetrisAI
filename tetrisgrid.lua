@@ -174,3 +174,17 @@ function Grid:valid(piece)
     end
     return true
 end
+
+function Grid:printGrid()
+    for r = 1, table.maxn(self.cells) do 
+        for c = 1, table.maxn(self.cells[r]) do
+            if(self.cells[r][c]) then
+                io.write("1")
+            else
+                io.write("0")
+            end
+            
+        end
+        print("")
+    end
+end 
